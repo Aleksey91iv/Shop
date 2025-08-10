@@ -15,7 +15,7 @@ public class ProductBasket {
         if (product == null) {
             System.out.println("Некорректный продукт.");
             return;
-        } else if (productsCount == size) {
+        } else if (productsCount >= size) {
             System.out.println("Корзина переполнена. Нет места для данного товара.");
             return;
         }
@@ -41,19 +41,16 @@ public class ProductBasket {
         }
 
         for(Product product : basket) {
-            if (product == null) {
-                continue;
+            if (product != null) {
+                System.out.println(product.getName() + ":\t" + product.getPrice());
             }
-            System.out.println(product.getName() + ":\t" + product.getPrice());
         }
         System.out.println("Итого: " + basketPrice);
     }
 
     public boolean isContains(String name) {
-        return !Arrays.stream(basket)
-                .filter(product ->
-                    product != null && product.getName().equals(name))
-                .toList().isEmpty();
+        return Arrays.stream(basket)
+                .anyMatch(product -> product != null && product.getName().equals(name));
     }
 
     public void cleanBasket() {
