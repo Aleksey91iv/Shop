@@ -1,9 +1,7 @@
 package org.skypro.skyshop.basket;
 
 import org.skypro.skyshop.product.Product;
-
 import java.util.Arrays;
-import java.util.Objects;
 
 public class ProductBasket {
     private final int size = 5;
