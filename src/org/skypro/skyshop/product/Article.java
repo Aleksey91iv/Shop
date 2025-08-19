@@ -16,7 +16,7 @@ public final class Article implements Searchable {
     }
 
     public String getContentType() {
-        return this.toString();
+        return "ARTICLE";
     }
 
     @Override

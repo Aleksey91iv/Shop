@@ -15,24 +15,19 @@ public class SearchEngine {
         elements = new Searchable[supportedElementsSearhCount];
     }
 
-    public boolean add(Searchable searchable) {
+    public void add(Searchable searchable) throws RuntimeException {
         if (searchable == null ) {
-            return false;
+            throw new RuntimeException("Превышен лимит поддерживаемых поиском элементов.");
         }
 
         for (int i = 0; i < elements.length; i++) {
             if (elements[i] == null) {
                 elements[i] = searchable;
-                return true;
             }
         }
-
-        return false;
     }
 
     public Searchable[] search(String pattern) {
-        Searchable[] result = Arrays.stream(elements)
-            .filter(item -> item != null && item.getSearchTerm().contains(pattern)).toArray(Searchable[]::new);
 
         return Arrays.stream(elements)
             .filter(item -> item != null && item.getSearchTerm()
