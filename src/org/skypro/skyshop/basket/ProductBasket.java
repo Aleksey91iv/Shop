@@ -1,59 +1,62 @@
 package org.skypro.skyshop.basket;
 
 import org.skypro.skyshop.product.Product;
-import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 public class ProductBasket {
-    private final int size = 5;
-    private Product[] basket = new Product[size];
-    private int basketPrice = 0;
-    private int productsCount = 0;
+    private LinkedList<Product> basket = new LinkedList();
 
     public void addProduct(Product product) {
         if (product == null) {
             System.out.println("Некорректный продукт.");
             return;
-        } else if (productsCount >= size) {
-            System.out.println("Корзина переполнена. Нет места для данного товара.");
-            return;
         }
 
-        for (int i = 0; i < size; i++) {
-            if (basket[i] == null) {
-                basket[i] = product;
-                break;
-            }
-        }
-        basketPrice += product.getPrice();
-        productsCount++;
+        basket.add(product);
+    }
+
+    public List<Product> removeProductsByName(String productName) {
+        List<Product> removedProducts = basket.stream()
+            .filter(product -> product.getName().equals(productName))
+            .toList();
+        basket.removeIf(product -> product.getName().equals(productName));
+
+        return removedProducts;
     }
 
     public int getBasketPrice() {
-        return basketPrice;
+        return basket.stream()
+            .filter(Objects::nonNull)
+            .mapToInt(Product::getPrice)
+            .sum();
     }
 
     public void printProductsInfo() {
-        if (productsCount == 0) {
+        if (basket.stream().count() == 0) {
             System.out.println("В корзине пусто.");
             return;
         }
 
-        for(Product product : basket) {
-            if (product != null) {
-                System.out.println(product.getName() + ":\t" + product.getPrice());
-            }
-        }
-        System.out.println("Итого: " + basketPrice);
+        basket.stream()
+            .filter(Objects::nonNull)
+            .forEach(item -> System.out.println(item.getName() + ":\t" + item.getPrice()));
+
+        System.out.println("Итого: "
+            + basket.stream()
+            .filter(Objects::nonNull)
+            .mapToInt(Product::getPrice)
+            .sum());
     }
 
     public boolean isContains(String name) {
-        return Arrays.stream(basket)
-                .anyMatch(product -> product != null && product.getName().equals(name));
+        return basket.stream()
+            .filter(Objects::nonNull)
+            .anyMatch(product -> product.getName().equals(name));
     }
 
     public void cleanBasket() {
-        Arrays.stream(basket).forEach(product -> product = null);
-        basketPrice = 0;
-        productsCount = 0;
+        basket.clear();
     }
 }
