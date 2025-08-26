@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ProductBasket {
-    private LinkedList<Product> basket = new LinkedList();
+    private List<Product> basket = new LinkedList();
 
     public void addProduct(Product product) {
         if (product == null) {

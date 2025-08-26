@@ -4,6 +4,7 @@ import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.infrastructure.search.*;
 import org.skypro.skyshop.product.*;
 import java.util.List;
+import org.skypro.skyshop.exceptions.BestResultNotFound;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -51,6 +52,19 @@ public class Main {
             System.out.println(
                 removedProducts.isEmpty()
                 ? "Список пуст" : "Список не пуст");
+            System.out.println("_________________________________________________________________");
+
+            try {
+                Searchable searchable = searchEngine.searchByMoreMatchEntry("товар товар");
+                System.out.println("Найден 'элемент':\n" + searchable.getSearchTerm());
+                System.out.println("_________________________________________________________________");
+                searchable = searchEngine.searchByMoreMatchEntry("JJJ");
+            } catch (BestResultNotFound ex) {
+                System.out.println(ex.getMessage());
+                System.out.println("_________________________________________________________________");
+            }
+
+            searchEngine.search("Сандалеты").forEach(item -> System.out.println(item.toString()));
             System.out.println("_________________________________________________________________");
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
