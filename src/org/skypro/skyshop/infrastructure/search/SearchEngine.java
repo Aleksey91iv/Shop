@@ -2,21 +2,19 @@ package org.skypro.skyshop.infrastructure.search;
 
 import org.skypro.skyshop.exceptions.BestResultNotFound;
 
-import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Comparator;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 
 public class SearchEngine {
 
-    private Searchable[] elements;
+    private List<Searchable> elements;
 
     public SearchEngine(int supportedElementsSearhCount) throws RuntimeException {
         if (supportedElementsSearhCount <= 0) {
             throw new RuntimeException("Некорретное значение поддерживаемого поиском количества элементов.");
         }
-        elements = new Searchable[supportedElementsSearhCount];
+        elements = new LinkedList<>();
     }
 
     public void add(Searchable searchable) {
@@ -24,29 +22,20 @@ public class SearchEngine {
             throw new RuntimeException("Превышен лимит поддерживаемых поиском элементов.");
         }
 
-        for (int i = 0; i < elements.length; i++) {
-            if (elements[i] == null) {
-                elements[i] = searchable;
-                break;
-            }
-        }
+        elements.add(searchable);
     }
 
-    public Searchable[] search(String pattern) {
-
-        return Arrays.stream(elements)
-            .filter(item -> item != null && item.getSearchTerm()
-            .contains(pattern))
-            .limit(5)
-            .toArray(Searchable[]::new);
+    public List<Searchable> search(String pattern) {
+        return elements.stream().filter(item -> item != null && item.getSearchTerm()
+                .contains(pattern)).toList();
     }
 
     public Searchable searchByMoreMatchEntry(String pattern) throws BestResultNotFound {
-        Searchable[] searchables = Arrays.stream(elements)
+        Searchable[] searchables = elements.stream()
                 .filter(item -> item != null && item.getSearchTerm()
                         .contains(pattern)).toArray(Searchable[]::new);
 
-        Searchable searchable = Arrays.stream(elements)
+        Searchable searchable = elements.stream()
                 .filter(item -> item != null && item.getSearchTerm()
                         .contains(pattern))
                 .max(Comparator.comparing(s -> countSubstring(s.getSearchTerm(), pattern))).orElse(null);
