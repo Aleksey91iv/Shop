@@ -4,6 +4,8 @@ import org.skypro.skyshop.exceptions.BestResultNotFound;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Comparator;
 
 public class SearchEngine {
@@ -25,9 +27,14 @@ public class SearchEngine {
         elements.add(searchable);
     }
 
-    public List<Searchable> search(String pattern) {
-        return elements.stream().filter(item -> item != null && item.getSearchTerm()
-                .contains(pattern)).toList();
+    public Map<String, Searchable> search(String pattern) {
+        Map<String, Searchable>  searchProductPositions = new HashMap<>();
+        elements.stream()
+            .filter(item -> item != null && item.getSearchTerm()
+            .contains(pattern))
+            .forEach(item -> searchProductPositions.put(item.getStringRepresentation(), item));
+
+        return  searchProductPositions;
     }
 
     public Searchable searchByMoreMatchEntry(String pattern) throws BestResultNotFound {

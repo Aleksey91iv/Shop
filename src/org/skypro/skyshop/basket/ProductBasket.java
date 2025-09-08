@@ -23,7 +23,7 @@ public class ProductBasket {
     }
 
     public List<Product> removeProductsByName(String productName) {
-        return basket.getOrDefault(productName, new LinkedList<>());
+        return basket.remove(productName);
     }
 
     public int getBasketPrice() {

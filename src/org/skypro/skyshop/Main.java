@@ -4,6 +4,7 @@ import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.infrastructure.search.*;
 import org.skypro.skyshop.product.*;
 import java.util.List;
+import java.util.Map;
 import org.skypro.skyshop.exceptions.BestResultNotFound;
 
 public class Main {
@@ -39,20 +40,25 @@ public class Main {
 
             List<Product> removedProducts = productBasket.removeProductsByName(simpleProduct.getName());
 
-            System.out.println("_________________________________________________________________");
-            System.out.println("Удалённые продукты (" + removedProducts.stream().count() + " шт.) :");
-            removedProducts.forEach(product -> System.out.println(product.toString()));
-            System.out.println("_________________________________________________________________");
-            System.out.println("Корзина после удаления:");
-            productBasket.printProductsInfo();
-            System.out.println("_________________________________________________________________");
+            if (removedProducts != null) {
+                System.out.println("_________________________________________________________________");
+                System.out.println("Удалённые продукты (" + removedProducts.stream().count() + " шт.) :");
+
+                removedProducts.forEach(product -> System.out.println(product.toString()));
+                System.out.println("_________________________________________________________________");
+                System.out.println("Корзина после удаления:");
+                productBasket.printProductsInfo();
+                System.out.println("_________________________________________________________________");
+            }
 
             removedProducts = productBasket.removeProductsByName("Верёвка");
-            System.out.println("Список удалённых продуктов \"Верёвка\": ");
-            System.out.println(
-                removedProducts.isEmpty()
-                ? "Список пуст" : "Список не пуст");
-            System.out.println("_________________________________________________________________");
+            if (removedProducts != null) {
+                System.out.println("Список удалённых продуктов \"Верёвка\": ");
+                System.out.println(
+                        removedProducts.isEmpty()
+                                ? "Список пуст" : "Список не пуст");
+                System.out.println("_________________________________________________________________");
+            }
 
             try {
                 Searchable searchable = searchEngine.searchByMoreMatchEntry("товар товар");
@@ -64,7 +70,11 @@ public class Main {
                 System.out.println("_________________________________________________________________");
             }
 
-            searchEngine.search("Сандалеты").forEach(item -> System.out.println(item.toString()));
+            Map<String, Searchable> searchResult = searchEngine.search("Сандалеты");
+            for (Map.Entry<String, Searchable> entry : searchResult.entrySet()){
+                System.out.println(entry.getValue().toString());
+            }
+
             System.out.println("_________________________________________________________________");
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
