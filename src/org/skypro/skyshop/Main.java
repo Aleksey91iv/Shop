@@ -1,13 +1,10 @@
 package org.skypro.skyshop;
 
 import org.skypro.skyshop.basket.ProductBasket;
-import org.skypro.skyshop.exceptions.BestResultNotFound;
 import org.skypro.skyshop.infrastructure.search.*;
 import org.skypro.skyshop.product.*;
-
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.concurrent.ExecutionException;
+import java.util.List;
+import org.skypro.skyshop.exceptions.BestResultNotFound;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -18,6 +15,7 @@ public class Main {
             Product discountedProduct = new DiscountedProduct("Сандалеты Размер 47", 200, 50);
             Product fixPriceProduct = new FixPriceProduct("Шлёпки");
 
+            productBasket.addProduct(simpleProduct);
             productBasket.addProduct(simpleProduct);
             productBasket.addProduct(discountedProduct);
             productBasket.addProduct(fixPriceProduct);
@@ -38,39 +36,36 @@ public class Main {
             searchEngine.add(sandalety);
             searchEngine.add(manShlepkiArticle);
             searchEngine.add(womanShlepkiArticle);
-            System.out.println("-------------------------------------------------------");
-            Searchable[] searchables = searchEngine.search("x");
 
-            // Exceptions test
-            try {
-                Product incorrectSimpleProductName = new SimpleProduct(null , 3);
-            }
-            catch (IllegalArgumentException ex) {
-                System.out.println(ex.getMessage());
-            }
+            List<Product> removedProducts = productBasket.removeProductsByName(simpleProduct.getName());
 
-            try {
-                Product incorrectSimpleProductPrice = new SimpleProduct("tapok", 0);
-            }
-            catch (IllegalArgumentException ex) {
-                System.out.println(ex.getMessage());
-            }
+            System.out.println("_________________________________________________________________");
+            System.out.println("Удалённые продукты (" + removedProducts.stream().count() + " шт.) :");
+            removedProducts.forEach(product -> System.out.println(product.toString()));
+            System.out.println("_________________________________________________________________");
+            System.out.println("Корзина после удаления:");
+            productBasket.printProductsInfo();
+            System.out.println("_________________________________________________________________");
 
-            try {
-                Product incorrectProductDiscount = new DiscountedProduct("tapok", 4, 101);
-            }
-            catch (IllegalArgumentException ex) {
-                System.out.println(ex.getMessage());
-            }
+            removedProducts = productBasket.removeProductsByName("Верёвка");
+            System.out.println("Список удалённых продуктов \"Верёвка\": ");
+            System.out.println(
+                removedProducts.isEmpty()
+                ? "Список пуст" : "Список не пуст");
+            System.out.println("_________________________________________________________________");
 
             try {
                 Searchable searchable = searchEngine.searchByMoreMatchEntry("товар товар");
                 System.out.println("Найден 'элемент':\n" + searchable.getSearchTerm());
-
+                System.out.println("_________________________________________________________________");
                 searchable = searchEngine.searchByMoreMatchEntry("JJJ");
             } catch (BestResultNotFound ex) {
                 System.out.println(ex.getMessage());
+                System.out.println("_________________________________________________________________");
             }
+
+            searchEngine.search("Сандалеты").forEach(item -> System.out.println(item.toString()));
+            System.out.println("_________________________________________________________________");
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
