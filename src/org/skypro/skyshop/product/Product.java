@@ -2,6 +2,8 @@ package org.skypro.skyshop.product;
 
 import org.skypro.skyshop.infrastructure.search.*;
 
+import java.util.Objects;
+
 public abstract class Product implements Searchable {
     private String name;
 
@@ -26,5 +28,18 @@ public abstract class Product implements Searchable {
 
     public String getContentType() {
         return "PRODUCT";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        return obj instanceof Product product ? name.equals(product.name) : false;
     }
 }
