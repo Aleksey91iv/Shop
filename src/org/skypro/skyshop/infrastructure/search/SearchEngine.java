@@ -2,21 +2,17 @@ package org.skypro.skyshop.infrastructure.search;
 
 import org.skypro.skyshop.exceptions.BestResultNotFound;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Comparator;
+import java.util.*;
 
 public class SearchEngine {
 
-    private List<Searchable> elements;
+    private Set<Searchable> elements;
 
     public SearchEngine(int supportedElementsSearhCount) throws RuntimeException {
         if (supportedElementsSearhCount <= 0) {
             throw new RuntimeException("Некорретное значение поддерживаемого поиском количества элементов.");
         }
-        elements = new LinkedList<>();
+        elements = new HashSet<Searchable>();
     }
 
     public void add(Searchable searchable) {
@@ -27,12 +23,12 @@ public class SearchEngine {
         elements.add(searchable);
     }
 
-    public Map<String, Searchable> search(String pattern) {
-        Map<String, Searchable>  searchProductPositions = new HashMap<>();
+    public Set<Searchable> search(String pattern) {
+        Set<Searchable>  searchProductPositions = new TreeSet<Searchable>(new SearchableComparator());
         elements.stream()
             .filter(item -> item != null && item.getSearchTerm()
             .contains(pattern))
-            .forEach(item -> searchProductPositions.put(item.getStringRepresentation(), item));
+            .forEach(item -> searchProductPositions.add(item));
 
         return  searchProductPositions;
     }
