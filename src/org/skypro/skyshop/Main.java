@@ -24,6 +24,9 @@ public class Main {
             productBasket.addProduct(simpleProduct1);
             productBasket.addProduct(simpleProduct2);
 
+            productBasket.printProductsInfo();
+            productBasket.getBasketPrice();
+
             Article sandalety = new Article("Сандалеты.", "Удобный товар.");
             Article manShlepkiArticle = new Article("Шлёпки", "Отличный товар товар.");
             Article womanShlepkiArticle = new Article("Шлёпки", "Хороший товар товар.");
@@ -40,7 +43,7 @@ public class Main {
             searchEngine.add(womanShlepkiArticle);
 
             System.out.println("Test_________________________________________________________________");
-            Set<Searchable> searchResult = searchEngine.search("л");
+            Set<Searchable> searchResult = searchEngine.search("Шлёпки");
             for (Searchable searchable : searchResult){
                 System.out.println(searchable.toString());
             }
