@@ -28,13 +28,13 @@ public class ProductBasket {
 
     public int getBasketPrice() {
         int basketPrice = 0;
-        for (Map.Entry<String,LinkedList<Product>> entry : basket.entrySet()) {
-            basketPrice += entry.getValue()
-                .stream()
-                .filter(Objects::nonNull)
-                .mapToInt(Product::getPrice)
-                .sum();
-        }
+
+        basketPrice = basket.values()
+            .stream()
+            .flatMap(Collection::stream)
+            .filter(Objects::nonNull)
+            .mapToInt(Product::getPrice)
+            .sum();
 
         return basketPrice;
     }
@@ -45,12 +45,11 @@ public class ProductBasket {
             return;
         }
 
-        for (Map.Entry<String,LinkedList<Product>> entry : basket.entrySet()) {
-            entry.getValue()
-                    .stream()
-                    .filter(Objects::nonNull)
-                    .forEach(item -> System.out.println(item.getName() + ":\t" + item.getPrice()));
-        }
+        basket.values()
+            .stream()
+            .flatMap(Collection::stream)
+            .filter(Objects::nonNull)
+            .forEach(item -> System.out.println(item.getName() + ":\t" + item.getPrice()));
 
         System.out.println("Итого: " + getBasketPrice());
     }
